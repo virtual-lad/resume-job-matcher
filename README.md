@@ -1,4 +1,4 @@
-# 🔍 JobMatchAI — Resume Job Matcher Using Vector Database
+# 🔍 JobMatchAI - Resume Job Matcher Using Vector Database
 
 This project demonstrates the use of a **vector database** for **semantic search**.
 Users can paste their skills/experience or upload a PDF resume, and the app finds the **top 5 most
@@ -125,8 +125,8 @@ Open your browser and go to: **http://127.0.0.1:8000/**
 
 1. Open **http://127.0.0.1:8000/**
 2. Choose one of two input methods:
-   - **Type Skills** — paste a description of your experience and skills
-   - **Upload PDF Resume** — upload a `.pdf` file (text will be extracted automatically)
+   - **Type Skills** - paste a description of your experience and skills
+   - **Upload PDF Resume** - upload a `.pdf` file (text will be extracted automatically)
 3. Click **"Find Matching Jobs"**
 4. View your **Top 5 Matching Jobs** with similarity scores
 
@@ -195,9 +195,9 @@ Try these inputs to see how semantic search works:
 
 ## 📝 Notes
 
-- The `chroma_db/` folder stores all vector data persistently — you only need to run `seed_jobs` once.
+- The `chroma_db/` folder stores all vector data persistently - you only need to run `seed_jobs` once.
 - To re-seed (e.g., after adding more jobs), run `python3 manage.py seed_jobs` again.
-- No login or authentication is required — the app is open to all users.
+- No login or authentication is required - the app is open to all users.
 - The AI model is downloaded automatically on first run.
 
 ---
