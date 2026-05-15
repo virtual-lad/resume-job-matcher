@@ -204,6 +204,6 @@ Try these inputs to see how semantic search works:
 
 ## 👨‍🎓 Project Info
 
-- **Course**: Database Systems / Software Engineering
-- **Objective**: Demonstrate the use of a vector database for semantic search
+- **Course**: Advance Database Management Systems
+- **Objective**: Demonstrate the use of a vector database and embeddings for semantic search
 - **Stack**: Django + ChromaDB + sentence-transformers
