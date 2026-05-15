@@ -1,0 +1,176 @@
+{% extends "matcher/base.html" %}
+{% block title %}How It Works - JobMatchAI{% endblock %}
+
+{% block content %}
+
+<!-- ── Page Header ─────────────────────────────────────── -->
+<section class="hiw-header">
+    <div class="hiw-header-content">
+        <h1>How It Works</h1>
+        <p class="hiw-subtitle">
+            A beginner-friendly explanation of <strong>vector databases</strong>
+            and <strong>semantic search</strong>.
+        </p>
+    </div>
+</section>
+
+<!-- ── Main Content ───────────────────────────────────── -->
+<section class="hiw-section">
+    <div class="hiw-container">
+
+        <!-- 1. The Problem with Keyword Search -->
+        <div class="hiw-card">
+            <div class="hiw-card-icon">🔤</div>
+            <div class="hiw-card-body">
+                <h2>The Problem with Regular Search</h2>
+                <p>
+                    Traditional search engines look for <strong>exact keywords</strong>.
+                    If you type <em>"ICU nurse"</em> but a job listing says
+                    <em>"critical care healthcare professional"</em>, the search misses it -
+                    even though they mean the same thing.
+                </p>
+                <div class="example-box bad-example">
+                    <strong>❌ Keyword Search:</strong><br>
+                    Input: <code>"ICU nurse experience"</code><br>
+                    Misses: <code>"Critical Care Healthcare Professional"</code>
+                    <em>(different words, same meaning)</em>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. What is a Vector Embedding -->
+        <div class="hiw-card">
+            <div class="hiw-card-icon">🧮</div>
+            <div class="hiw-card-body">
+                <h2>What is a Vector Embedding?</h2>
+                <p>
+                    A <strong>vector embedding</strong> is a list of numbers that represents the
+                    <em>meaning</em> of a piece of text. Words or sentences with similar meanings
+                    get similar numbers - so they end up close to each other in
+                    <em>mathematical space</em>.
+                </p>
+                <div class="example-box">
+                    <strong>Example:</strong><br>
+                    <code>"nurse"</code> → <code>[0.12, -0.45, 0.78, ...]</code><br>
+                    <code>"doctor"</code> → <code>[0.15, -0.41, 0.80, ...]</code>
+                    &nbsp;&larr; <em>close!</em><br>
+                    <code>"JavaScript"</code> → <code>[0.92, 0.11, -0.33, ...]</code>
+                    &nbsp;&larr; <em>far away</em>
+                </div>
+                <p>
+                    We use a model called <code>all-MiniLM-L6-v2</code> (from
+                    <strong>sentence-transformers</strong>) to generate these vectors.
+                    It's a lightweight but powerful AI model that's free to use.
+                </p>
+            </div>
+        </div>
+
+        <!-- 3. What is ChromaDB -->
+        <div class="hiw-card">
+            <div class="hiw-card-icon">🗄️</div>
+            <div class="hiw-card-body">
+                <h2>What is ChromaDB?</h2>
+                <p>
+                    <strong>ChromaDB</strong> is a <em>vector database</em> - a special type of database
+                    designed to store and search embedding vectors efficiently.
+                    Unlike regular databases that compare text, ChromaDB compares numbers
+                    to find the most <em>mathematically similar</em> entries.
+                </p>
+                <ul class="hiw-list">
+                    <li>✅ Free and open-source</li>
+                    <li>✅ Runs completely on your local machine (no cloud needed)</li>
+                    <li>✅ Very fast - searches thousands of vectors in milliseconds</li>
+                    <li>✅ Easy to install: just <code>pip install chromadb</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4. Step-by-step flow -->
+        <div class="hiw-card">
+            <div class="hiw-card-icon">🔄</div>
+            <div class="hiw-card-body">
+                <h2>Step-by-Step: How This App Works</h2>
+
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-num">1</div>
+                        <div class="flow-text">
+                            <strong>Database Setup (one time)</strong><br>
+                            55+ job listings are embedded into vectors and stored in ChromaDB on disk.
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-num">2</div>
+                        <div class="flow-text">
+                            <strong>User Input</strong><br>
+                            You type your skills or upload your PDF resume.
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-num">3</div>
+                        <div class="flow-text">
+                            <strong>Generate Embedding</strong><br>
+                            The AI model converts your text into a vector of numbers (384 dimensions).
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-num">4</div>
+                        <div class="flow-text">
+                            <strong>Query ChromaDB</strong><br>
+                            ChromaDB compares your vector against all job vectors using
+                            <em>cosine similarity</em> - finding the closest matches.
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-num">5</div>
+                        <div class="flow-text">
+                            <strong>Results</strong><br>
+                            The top 5 most similar jobs are returned with a match percentage score.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Cosine Similarity -->
+        <div class="hiw-card">
+            <div class="hiw-card-icon">📐</div>
+            <div class="hiw-card-body">
+                <h2>What is Cosine Similarity?</h2>
+                <p>
+                    Cosine similarity measures the <strong>angle</strong> between two vectors.
+                    Two vectors pointing in the same direction have a similarity of <strong>1.0 (100%)</strong>,
+                    meaning they're identical in meaning. Vectors pointing in opposite directions
+                    have a similarity of <strong>0.0 (0%)</strong>.
+                </p>
+                <div class="example-box">
+                    <strong>Formula:</strong>
+                    <code>similarity = (A · B) / (|A| × |B|)</code><br><br>
+                    <strong>Result:</strong> A number between 0 and 1<br>
+                    → 0.9 = 90% similar (excellent match)<br>
+                    → 0.5 = 50% similar (moderate match)<br>
+                    → 0.1 = 10% similar (poor match)
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="hiw-cta">
+            <p>Ready to try it?</p>
+            <a href="{% url 'matcher:index' %}" class="submit-btn" style="display:inline-block; text-decoration:none;">
+                🚀 Find My Matching Jobs
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

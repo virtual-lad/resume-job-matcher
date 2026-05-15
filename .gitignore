@@ -1,0 +1,18 @@
+# Virtual environment
+.venv/
+
+# ChromaDB data (large binary files — re-generate with seed_jobs)
+chroma_db/
+
+# Django
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/

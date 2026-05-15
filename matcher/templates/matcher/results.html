@@ -1,0 +1,78 @@
+{% extends "matcher/base.html" %}
+{% block title %}Top {{ total_results }} Matching Jobs - JobMatchAI{% endblock %}
+
+{% block content %}
+
+<!-- ── Results Header ─────────────────────────────────── -->
+<section class="results-header">
+    <div class="results-header-content">
+        <h1 class="results-title">Your Top {{ total_results }} Job Matches</h1>
+        <p class="results-subtitle">Based on your profile, here are the most relevant opportunities:</p>
+
+        <div class="query-preview">
+            <span class="query-label">Your input:</span>
+            <em>"{{ query_preview }}"</em>
+        </div>
+    </div>
+</section>
+
+<!-- ── Job Cards ──────────────────────────────────────── -->
+<section class="results-section">
+    <div class="results-container">
+
+        {% if jobs %}
+            {% for job in jobs %}
+            <div class="job-card">
+
+                <!-- Rank badge -->
+                <div class="rank-badge">#{{ forloop.counter }}</div>
+
+                <!-- Card Header -->
+                <div class="job-header">
+                    <div class="job-title-group">
+                        <h2 class="job-title">{{ job.title }}</h2>
+                        <p class="job-company">🏢 {{ job.company }}</p>
+                    </div>
+                    <div class="score-badge
+                        {% if job.score >= 70 %}score-high
+                        {% elif job.score >= 50 %}score-medium
+                        {% else %}score-low{% endif %}">
+                        {{ job.score }}%<br>
+                        <small>match</small>
+                    </div>
+                </div>
+
+                <!-- Field Tag -->
+                <span class="field-tag">{{ job.field }}</span>
+
+                <!-- Description -->
+                <p class="job-description">{{ job.description }}</p>
+
+                <!-- Skills -->
+                <div class="skills-section">
+                    <span class="skills-label">Required Skills:</span>
+                    <div class="skills-list">
+                        {% for skill in job.skills_list %}
+                        <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        {% else %}
+            <div class="no-results">
+                <p>😕 No matching jobs found. Please try again with more detail.</p>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Search Again -->
+    <div class="search-again">
+        <a href="{% url 'matcher:index' %}" class="search-again-btn">← Search Again</a>
+    </div>
+</section>
+
+{% endblock %}

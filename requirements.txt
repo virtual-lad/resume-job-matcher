@@ -1,0 +1,11 @@
+# Core framework
+django>=5.2
+
+# Vector database
+chromadb>=1.5.9
+
+# Sentence embeddings (semantic search)
+sentence-transformers>=5.5.0
+
+# PDF text extraction
+pdfplumber>=0.11.9

@@ -1,0 +1,187 @@
+{% extends "matcher/base.html" %}
+{% block title %}Resume Job Matcher - Find Your Perfect Job{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero Section ─────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">✨ Powered by Vector Database &amp; AI Embeddings</div>
+        <h1 class="hero-title">Find Your <span class="highlight">Perfect Job</span><br>With Semantic Search</h1>
+        <p class="hero-subtitle">
+            Paste your skills or upload your resume - our AI finds the top 5 jobs
+            that truly match your profile from <strong>{{ job_count }}+ job listings</strong>.
+        </p>
+    </div>
+</section>
+
+<!-- ── Input Form Section ──────────────────────────────── -->
+<section class="form-section">
+    <div class="form-container">
+
+        <form id="matchForm" method="POST" enctype="multipart/form-data" action="{% url 'matcher:index' %}">
+            {% csrf_token %}
+
+            <div class="input-tabs">
+                <button type="button" class="tab-btn active" id="tab-text" onclick="switchTab('text')">
+                    ✏️ Type Skills
+                </button>
+                <button type="button" class="tab-btn" id="tab-pdf" onclick="switchTab('pdf')">
+                    📄 Upload PDF Resume
+                </button>
+            </div>
+
+            <!-- Text Input Panel -->
+            <div id="panel-text" class="input-panel active">
+                <label for="skills_text" class="field-label">Describe your skills and experience</label>
+                <textarea id="skills_text" name="skills_text" class="text-input"
+                    placeholder="Example: I have 3 years of experience as a registered nurse in an ICU ward. I am skilled in patient monitoring, IV therapy, and electronic medical records..."
+                    rows="7"></textarea>
+                <p class="field-hint">💡 The more detail you provide, the more accurate the results.</p>
+            </div>
+
+            <!-- PDF Upload Panel -->
+            <div id="panel-pdf" class="input-panel">
+                <label for="resume_pdf" class="field-label">Upload your resume (PDF only)</label>
+
+                <!-- Empty state: drop zone -->
+                <div class="file-drop-zone" id="dropZone" onclick="document.getElementById('resume_pdf').click()">
+                    <div class="drop-icon">📂</div>
+                    <p class="drop-text">Click to browse or drag &amp; drop your PDF</p>
+                    <p class="drop-hint">PDF only · Max 5 MB</p>
+                </div>
+                <!-- Size error message -->
+                <p class="file-size-error" id="fileSizeError" style="display:none">
+                    ⚠️ File is too large. Please upload a PDF under 5 MB.
+                </p>
+
+                <!-- File selected state: card -->
+                <div class="file-selected-card" id="fileCard" style="display:none">
+                    <div class="file-card-left">
+                        <div class="file-card-icon">📄</div>
+                        <div class="file-card-info">
+                            <span class="file-card-name" id="fileCardName">—</span>
+                            <span class="file-card-size" id="fileCardSize">—</span>
+                        </div>
+                    </div>
+                    <button type="button" class="file-remove-btn" onclick="removeFile()" title="Remove file">&times;</button>
+                </div>
+
+                <input type="file" id="resume_pdf" name="resume_pdf" accept=".pdf" style="display:none"
+                    onchange="showFileName(this)" />
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">🚀 Find Matching Jobs</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- How it works quick teaser -->
+    <div class="teaser-row">
+        <p>
+            Curious how this works?
+            <a href="{% url 'matcher:how_it_works' %}" class="teaser-link">Learn about vector embeddings →</a>
+        </p>
+    </div>
+</section>
+
+<!-- ── Feature Cards ───────────────────────────────────── -->
+<section class="features-section">
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <h3>Semantic Understanding</h3>
+            <p>Goes beyond keywords - understands the <em>meaning</em> of your experience.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Instant Results</h3>
+            <p>Vector similarity search returns the top 5 matches in milliseconds.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3>50+ Diverse Jobs</h3>
+            <p>From nursing to architecture - not just tech jobs.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── Inline JS for tab switching ──────────────── -->
+<script>
+    function switchTab(tab) {
+        document.getElementById('panel-text').classList.remove('active');
+        document.getElementById('panel-pdf').classList.remove('active');
+        document.getElementById('tab-text').classList.remove('active');
+        document.getElementById('tab-pdf').classList.remove('active');
+        document.getElementById('panel-' + tab).classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    function formatBytes(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+
+    function showFileName(input) {
+        const errorEl = document.getElementById('fileSizeError');
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            // Check size limit
+            if (file.size > MAX_SIZE) {
+                input.value = '';              // clear the input
+                errorEl.style.display = 'block';
+                return;
+            }
+            errorEl.style.display = 'none';
+            // Show the file card, hide the drop zone
+            document.getElementById('dropZone').style.display = 'none';
+            document.getElementById('fileCard').style.display = 'flex';
+            document.getElementById('fileCardName').textContent = file.name;
+            document.getElementById('fileCardSize').textContent = formatBytes(file.size);
+        }
+    }
+
+    function removeFile() {
+        const input = document.getElementById('resume_pdf');
+        input.value = '';
+        document.getElementById('fileCard').style.display = 'none';
+        document.getElementById('dropZone').style.display = 'flex';
+        document.getElementById('fileSizeError').style.display = 'none';
+    }
+
+    document.getElementById('matchForm').addEventListener('submit', function () {
+        document.getElementById('btnText').textContent = '⏳ Searching...';
+        document.getElementById('submitBtn').disabled = true;
+    });
+
+    // Drag & drop
+    const dropZone = document.getElementById('dropZone');
+    if (dropZone) {
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                const errorEl = document.getElementById('fileSizeError');
+                if (file.size > MAX_SIZE) {
+                    errorEl.style.display = 'block';
+                    return;
+                }
+                errorEl.style.display = 'none';
+                const input = document.getElementById('resume_pdf');
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+                showFileName(input);
+            }
+        });
+    }
+</script>
+
+{% endblock %}

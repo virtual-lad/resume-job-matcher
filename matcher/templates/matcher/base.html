@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Resume Job Matcher - Find your perfect job using AI-powered semantic search and vector database technology." />
+    <title>{% block title %}Resume Job Matcher{% endblock %}</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'matcher/style.css' %}" />
+</head>
+
+<body>
+
+    <!-- ── Navbar ──────────────────────────────── -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'matcher:index' %}" class="nav-brand">
+                <span class="brand-icon">🔍</span>
+                <span>Resume Matcher</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'matcher:index' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">Home</a>
+                </li>
+                <li><a href="{% url 'matcher:how_it_works' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'how_it_works' %}active{% endif %}">How
+                        It Works</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ── Flash Messages ──────────────────────── -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <span>⚠️</span> {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ── Main Content ────────────────────────── -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ── Footer ─────────────────────────────── -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>
+                Built with <strong>Django</strong> + <strong>ChromaDB</strong> + <strong>sentence-transformers</strong>
+            </p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
